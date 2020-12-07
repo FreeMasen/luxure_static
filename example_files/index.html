@@ -1,0 +1,69 @@
+<html>
+
+<head>
+  <title>Luxure Static File Middleware</title>
+  <meta name="viewport" content="width=700">
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+  <script charset="UTF-8"
+    src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/languages/lua.min.js"></script>
+</head>
+
+<body>
+  <header class="page-heading">
+    <h1><a href="#">Luxure Static File Middleware</h1><a class="home-link" href="../">luxure-static</a>
+  </header>
+  <p>Luxure Static File Middleware is a middleware package
+    for sending static files from your Luxure web server</p>
+  <h2 id="Usage"><a href="#Usage">Usage</a></h2>
+  <h3 id="Installation"><a href="#Installation">Installation</a></h3>
+  <pre><code class="language-sh">$ luarocks install luxure_static
+</code></pre>
+  <h3 id="Examples"><a href="#Examples">Examples</a></h3>
+  <p>The most basic usage is to <code>require</code> this module and call it like a function</p>
+  <pre><code class="language-lua">local lux = require 'luxure'
+local socket = require 'socket'
+local static = require 'luxure-static'
+
+local server = lux.Server.new(socket)
+server:use(static('example_files'))
+server:listen(9876)
+server:run()
+</code></pre>
+  <p>For more advanced usages, the module returns a builder that you can use for
+    configuration.</p>
+  <h4 id="Options"><a href="#Options">Options</a></h4>
+  <ul>
+    <li><code>send_buffer_size</code>: This middleware buffers the output of the response body, this will override the
+      default 2048 bytes</li>
+    <li><code>mime</code>: A map file extensions to mime types exists for well known mime types, however you may need to
+      add your own mappings</li>
+    <li><code>mimes</code>: Same as <code>mime</code> but takes a table where the extension is the key and the mime type
+      is the value</li>
+  </ul>
+  <pre><code class="language-lua">local lux = require 'luxure'
+local socket = require 'socket'
+local static = require 'luxure-static'
+
+local server = lux.Server.new(socket)
+server:use(static
+    :send_buffer_size(4096)
+    :mime('wasm', 'application/wasm')
+    :mimes({
+        'lua', 'application/lua',
+        'moon', 'application/moonscript',
+        'tl', 'application/teal',
+    })
+    :build('./example_files')
+)
+server:listen(9876)
+server:run()
+</code></pre>
+  <footer></footer>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
