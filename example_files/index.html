@@ -13,17 +13,18 @@
 
 <body>
   <header class="page-heading">
-    <h1><a href="#">Luxure Static File Middleware</h1><a class="home-link" href="../">luxure-static</a>
+    <h1>Luxure Static File Middleware</h1>
   </header>
-  <p>Luxure Static File Middleware is a middleware package
-    for sending static files from your Luxure web server</p>
-  <h2 id="Usage"><a href="#Usage">Usage</a></h2>
-  <h3 id="Installation"><a href="#Installation">Installation</a></h3>
-  <pre><code class="language-sh">$ luarocks install luxure_static
+  <main>
+    <p>Luxure Static File Middleware is a middleware package
+      for sending static files from your Luxure web server</p>
+    <h2 id="Usage">Usage</h2>
+    <h3 id="Installation">Installation</h3>
+    <pre><code class="language-sh">$ luarocks install luxure_static
 </code></pre>
-  <h3 id="Examples"><a href="#Examples">Examples</a></h3>
-  <p>The most basic usage is to <code>require</code> this module and call it like a function</p>
-  <pre><code class="language-lua">local lux = require 'luxure'
+    <h3 id="Examples">Examples</h3>
+    <p>The most basic usage is to <code>require</code> this module and call it like a function</p>
+    <pre><code class="language-lua">local lux = require 'luxure'
 local socket = require 'socket'
 local static = require 'luxure-static'
 
@@ -32,18 +33,20 @@ server:use(static('example_files'))
 server:listen(9876)
 server:run()
 </code></pre>
-  <p>For more advanced usages, the module returns a builder that you can use for
-    configuration.</p>
-  <h4 id="Options"><a href="#Options">Options</a></h4>
-  <ul>
-    <li><code>send_buffer_size</code>: This middleware buffers the output of the response body, this will override the
-      default 2048 bytes</li>
-    <li><code>mime</code>: A map file extensions to mime types exists for well known mime types, however you may need to
-      add your own mappings</li>
-    <li><code>mimes</code>: Same as <code>mime</code> but takes a table where the extension is the key and the mime type
-      is the value</li>
-  </ul>
-  <pre><code class="language-lua">local lux = require 'luxure'
+    <p>For more advanced usages, the module returns a builder that you can use for
+      configuration.</p>
+    <h4 id="Options">Options</h4>
+    <ul>
+      <li><code>send_buffer_size</code>: This middleware buffers the output of the response body, this will override the
+        default 2048 bytes</li>
+      <li><code>mime</code>: A map file extensions to mime types exists for well known mime types, however you may need
+        to
+        add your own mappings</li>
+      <li><code>mimes</code>: Same as <code>mime</code> but takes a table where the extension is the key and the mime
+        type
+        is the value</li>
+    </ul>
+    <pre><code class="language-lua">local lux = require 'luxure'
 local socket = require 'socket'
 local static = require 'luxure-static'
 
@@ -61,6 +64,7 @@ server:use(static
 server:listen(9876)
 server:run()
 </code></pre>
+  </main>
   <footer></footer>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
   <script>hljs.initHighlightingOnLoad();</script>

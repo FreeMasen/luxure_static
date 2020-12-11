@@ -27,9 +27,15 @@ function File.new(path)
         ext = string.match(filename, '[^.]+$')
     end
     local fd, err = io.open(path)
+
     if not fd and ext == filename then
-        fd = io.open(path .. '/index.html')
-        ext = 'html'
+        fd = io.open(path .. '.html')
+        if not fd then
+            io.open(path .. '/index.html')
+        end
+        if fd then
+            ext = 'html'
+        end
     end
     if not fd then
         return nil, err
@@ -47,10 +53,7 @@ function File.new(path)
 end
 
 StaticFile.__call = function(self, dir)
-    if type(dir) == 'string' then
-        self:dir(dir)
-    end
-    return self:build()
+    return self:build(dir)
 end
 
 ---Generrates a ltn12.sink for sending data across
@@ -73,9 +76,9 @@ end
 ---@param req Request
 ---@param res Response
 function StaticFile:send_file(req, res)
-    res._send_buffer_size = self._send_buffer_size
+    res:set_send_buffer_size(self._send_buffer_size)
     local f = self:find_file(req)
-    res.headers.content_length = string.format('%i', f.size)
+    res:content_length(f.size)
     -- set the mime type based on the file extension
     local mime = self._content_types[f.ext]
         or 'application/octet-stream'
@@ -84,7 +87,7 @@ function StaticFile:send_file(req, res)
     -- calling res:append_bod on each chunk
     ltn12.pump.all(
         ltn12.source.file(f.fd),
-        response_sink(res)
+        res:sink()
     )
 end
 
@@ -93,12 +96,13 @@ end
 ---@return File
 function StaticFile:find_file(req)
     local resolved = self._dir
-    if string.sub(req.url.path, 1) ~= '/' then
+    if string.sub(req.url.path, 1, 1) ~= '/' then
         resolved = resolved .. '/' .. req.url.path
     else
         resolved = resolved .. req.url.path
     end
-    local f, _ = File.new(resolved)
+    local f, _e = File.new(resolved)
+    if not f then print('No file', _e) end
     Error.assert(f, 'File not found', 404)
     return f, resolved
 end
@@ -144,16 +148,18 @@ end
 --- Finalize the configuration of this middleware
 --- returning the middleware function
 ---@return fun(req:Request,res:Response)
-function StaticFile:build()
+function StaticFile:build(dir)
+    if type(dir) == 'string' then
+        self:dir(dir)
+    end
     return function(req, res, next)
         next(req, res)
-        if req.handled then
-            -- already handled... ignoring
-            return
-        end
-        req.err = self:send_file(req, res) or req.err
-        if not req.err then
-            req.handled = true
+        if not req.handled then
+            local err = self:send_file(req, res)
+            req.err = err or req.err
+            if not req.err then
+                req.handled = true
+            end
         end
     end
 end
