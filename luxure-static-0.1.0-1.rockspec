@@ -1,5 +1,5 @@
 package = "luxure_static"
-version = "dev-1"
+version = "0.1.0-1"
 source = {
    url = "https://github.com/FreeMasen/luxure_static"
 }
@@ -16,5 +16,5 @@ build = {
 }
 dependencies = {
    "lua >= 5.1",
-   "luxure >= 0.1.1"
+   "luxure >= 0.1.2"
 }
