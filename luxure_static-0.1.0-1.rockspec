@@ -10,7 +10,7 @@ description = {
 build = {
    type = "builtin",
    modules = {
-      ["luxure_static"] = "luxure_static.lua"
+      ["luxure_static"] = "luxure_static.lua",
       ["content_types"] = "content_types.lua"
    }
 }
